@@ -3,10 +3,10 @@ import {browserHistory} from 'react-router';
 
 export default class Login extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            msg: ''
+            msg: this.props.location.query.msg
         }
     }
 
