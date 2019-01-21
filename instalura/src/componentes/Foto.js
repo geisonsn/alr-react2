@@ -2,18 +2,39 @@ import React, { Component } from 'react';
 import {Link} from 'react-router';
 
 class FotoAtualizacoes extends Component {
-    render(){
-        return (
-            <section className="fotoAtualizacoes">
-              <a href="#" className="fotoAtualizacoes-like">Likar</a>
-              <form className="fotoAtualizacoes-form">
-                <input type="text" placeholder="Adicione um comentário..." className="fotoAtualizacoes-form-campo"/>
-                <input type="submit" value="Comentar!" className="fotoAtualizacoes-form-submit"/>
-              </form>
 
-            </section>            
-        );
-    }
+  constructor(props) {
+    super(props);
+    this.state = {likeada : this.props.foto.likeada};
+  }
+
+  like(event) {
+    event.preventDefault();
+    fetch(`http://localhost:8080/api/fotos/${this.props.foto.id}/like?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`, {method: 'POST'})
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Não foi possível realizar like na foto');
+        }
+      })
+      .then(like => {
+        this.setState({likeada : !this.state.likeada})
+      });
+  }
+
+  render(){
+      return (
+          <section className="fotoAtualizacoes">
+            <a onClick={this.like.bind(this)} className={this.state.likeada ? 'fotoAtualizacoes-like-ativo' : 'fotoAtualizacoes-like'}>Likar</a>
+            <form className="fotoAtualizacoes-form">
+              <input type="text" placeholder="Adicione um comentário..." className="fotoAtualizacoes-form-campo"/>
+              <input type="submit" value="Comentar!" className="fotoAtualizacoes-form-submit"/>
+            </form>
+
+          </section>            
+      );
+  }
 }
 
 class FotoInfo extends Component {
@@ -78,7 +99,7 @@ export default class FotoItem extends Component {
             <FotoHeader foto={this.props.foto}/>
             <img alt="foto" className="foto-src" src={this.props.foto.urlFoto}/>
             <FotoInfo foto={this.props.foto}/>
-            <FotoAtualizacoes/>
+            <FotoAtualizacoes foto={this.props.foto}/>
           </div>            
         );
     }
