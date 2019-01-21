@@ -1,14 +1,14 @@
-import {Component} from 'react';
-import {browserHistory} from 'react-router';
+import { Component } from 'react';
+import {browserHistory} from  'react-router';
 
 export default class Logout extends Component {
 
-    componentWillMount() {
+    componentWillMount(){
         localStorage.removeItem('auth-token');
         browserHistory.push('/');
     }
 
-    render() {
+    render(){
         return null;
     }
 }
