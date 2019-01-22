@@ -41,6 +41,27 @@ export default class Timeline extends Component {
         });
     }
 
+    comenta(fotoId, textoComentario) {
+      const requestInfo = {
+        method: 'POST',
+        body: JSON.stringify({texto: textoComentario}),
+        headers: new Headers({
+          'Content-type': 'application/json'
+        })
+      };
+      fetch(`http://localhost:8080/api/fotos/${fotoId}/comment?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`, requestInfo)
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Não foi possível realizar o comentário');
+          }
+        })
+        .then(novoComentario => {
+          Pubsub.publish('novos-comentarios', {fotoId: fotoId, novoComentario})
+        })
+    }
+
     componentWillMount() {
       Pubsub.subscribe('timeline', (topico, resultadoPesquisa) => {
         this.setState({fotos: resultadoPesquisa.fotos});
@@ -66,7 +87,7 @@ export default class Timeline extends Component {
             transitionEnterTimeout={500}
             transitionLeaveTimeout={300}>
               {
-                this.state.fotos.map(foto => <FotoItem key={foto.id} foto={foto} like={this.like}/>)
+                this.state.fotos.map(foto => <FotoItem key={foto.id} foto={foto} like={this.like} comenta={this.comenta}/>)
               }
           </ReactCSSTransitionGroup>
         </div>            
