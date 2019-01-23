@@ -124,7 +124,7 @@ export default class FotoItem extends Component {
             <FotoHeader foto={this.props.foto}/>
             <img alt="foto" className="foto-src" src={this.props.foto.urlFoto}/>
             <FotoInfo foto={this.props.foto}/>
-            <FotoAtualizacoes foto={this.props.foto} like={this.props.like} comenta={this.props.comenta}/>
+            <FotoAtualizacoes {...this.props}/>
           </div>            
         );
     }
