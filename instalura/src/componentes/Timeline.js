@@ -68,7 +68,7 @@ export default class Timeline extends Component {
       });
       Pubsub.subscribe('atualiza-liker',(topico, infoLiker) => {
         const fotoAchada = this.state.fotos.find(foto => foto.id === infoLiker.fotoId);
-        
+        fotoAchada.likeada =!fotoAchada.likeada;
         const possivelLiker = fotoAchada.likers.find(liker => liker.login === infoLiker.liker.login);
         if(possivelLiker === undefined){
           fotoAchada.likers.push(infoLiker.liker);
